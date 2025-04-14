@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Track Ride</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+
+<h2>🚗 Live Ride Tracking</h2>
+
+<div id="map" style="height:400px;"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+
+<script>
+var socket = io();
+var ride_id = "{{ ride_id }}";
+
+// JOIN ROOM
+socket.emit("join_ride", { ride_id: ride_id });
+
+// MAP
+var map = L.map('map').setView([17.3850, 78.4867], 10);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+let driverMarker;
+
+// DRIVER SENDS LOCATION
+if (navigator.geolocation) {
+    navigator.geolocation.watchPosition(position => {
+        let lat = position.coords.latitude;
+        let lng = position.coords.longitude;
+
+        socket.emit("location", {
+            ride_id: ride_id,
+            lat: lat,
+            lng: lng
+        });
+    });
+}
+
+// RECEIVE LOCATION
+socket.on("location", function (data) {
+    if (driverMarker) {
+        driverMarker.setLatLng([data.lat, data.lng]);
+    } else {
+        driverMarker = L.marker([data.lat, data.lng]).addTo(map);
+    }
+
+    map.setView([data.lat, data.lng], 13);
+});
+</script>
+
+</body>
+</html>
