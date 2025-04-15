@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register - Ace Smart Ride</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-body">
+
+<div class="auth-container">
+    <h2>🚗 Create Account</h2>
+
+    <form method="POST">
+        <input type="text" name="name" placeholder="👤 Full Name" required>
+        <input type="email" name="email" placeholder="📧 Email" required>
+        <input type="password" name="password" placeholder="🔒 Password" required>
+
+        <select name="role">
+            <option value="passenger">Passenger</option>
+            <option value="driver">Driver</option>
+        </select>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <p>Already have account? <a href="/login">Login</a></p>
+</div>
+
+</body>
+</html>

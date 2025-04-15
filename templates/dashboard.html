@@ -1,0 +1,201 @@
+
+               
+           <!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- LEAFLET -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+
+<header>
+    <h2>🚗 Ace Smart Ride</h2>
+    <div>
+        Welcome {{ user.name }} ({{ user.role }}) |
+      <a href="#" class="nav-link about-btn" onclick="openAbout()">About</a>
+<a href="/logout" class="nav-link logout-btn">Logout</a>
+    </div>
+</header>
+
+<div class="container">
+
+    <!-- MAP -->
+    <div id="map"></div>
+
+    <!-- SEARCH -->
+    <div class="search-box">
+    <span class="search-icon">🔍</span>
+    <input type="text" placeholder="Search rides...">
+</div>
+
+    {% if user.role == 'driver' %}
+   <div class="form-wrapper">
+
+    <div class="auth-container">
+        <h3>🚗 Add Ride</h3>
+
+        <form action="{{ url_for('add_ride') }}" method="POST">
+
+            <input type="text" name="source" placeholder="📍 Source" required>
+            <input type="text" name="destination" placeholder="📍 Destination" required>
+            <input type="date" name="ride_date" required>
+            <input type="number" name="seats" placeholder="💺 Seats" required>
+            <input type="number" name="price" placeholder="💰 Price" required>
+
+            <input type="tel" name="phone"
+                   pattern="[6-9][0-9]{9}"
+                   placeholder="📞 Phone Number"
+                   required>
+
+            <button type="submit">Add Ride</button>
+
+        </form>
+    </div>
+
+</div>
+    {% endif %}
+
+    <h3>Available Rides</h3>
+
+    {% for ride in rides %}
+   <div class="ride-card">
+
+    <p><b>Source:</b> {{ ride.source }}</p>
+    <p><b>Destination:</b> {{ ride.destination }}</p>
+    <p><b>Date:</b> {{ ride.ride_date }}</p>
+    <p><b>Seats:</b> {{ ride.seats }}</p>
+    <p><b>Price:</b> ₹{{ ride.price }}</p>
+{% if user.role == 'passenger' and ride.booked == 1 %}
+
+    {% if ride.already_rated == 0 %}
+        <!-- SHOW RATING FORM -->
+        <form action="{{ url_for('rate_ride', ride_id=ride.id) }}" method="POST">
+            <label>Rate Driver:</label>
+            <select name="rating" required>
+                <option value="">Select</option>
+                <option value="1">1 ⭐</option>
+                <option value="2">2 ⭐</option>
+                <option value="3">3 ⭐</option>
+                <option value="4">4 ⭐</option>
+                <option value="5">5 ⭐</option>
+            </select>
+            <button type="submit" class="btn accept">Submit</button>
+        </form>
+
+    {% else %}
+        <!-- AFTER RATING -->
+        <p><b>✅ You rated this driver</b></p>
+    {% endif %}
+
+{% endif %}
+<p><b>Driver Rating:</b> 
+    {{ ride.avg_rating if ride.avg_rating else "No ratings yet" }}
+</p>
+
+    {% if ride.booked and user.role == 'passenger' %}
+        <p><b>Phone:</b> {{ ride.phone }}</p>
+    {% endif %}
+
+   {% if user.role == 'passenger' %}
+
+    {% if ride.booked == 0 %}
+        <a href="{{ url_for('book', ride_id=ride.id) }}" class="btn accept">Book</a>
+    {% else %}
+        <button class="btn booked" disabled>Booked</button>
+    {% endif %}
+
+{% endif %}
+
+    {% if user.role == 'driver' and ride.booked == 1 and ride.completed == 0 %}
+    <a href="{{ url_for('complete_ride', ride_id=ride.id) }}" class="btn accept">
+        Mark Completed
+    </a>
+{% endif %}
+
+</div>
+
+        
+    {% endfor %}
+
+</div>
+
+<!-- FLOATING CHAT ICON -->
+<div id="chat-icon">💬</div>
+<!-- CHAT WINDOW -->
+
+<div id="chat-box">
+    <div id="chat-header">
+        AI Assistant 🤖
+        <span onclick="clearChat()" style="float:right; cursor:pointer;">🗑️</span>
+    </div>
+
+    <div id="chat-messages"></div>
+
+    <input type="text" id="chat-input" placeholder="Ask something..." onkeypress="sendChat(event)">
+</div>
+<!-- ABOUT POPUP -->
+<div id="about-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeAbout()">&times;</span>
+
+        <h2>🚗 Ace Smart Ride</h2>
+
+        <p>
+            Ace Smart Ride is an intercity ride-sharing web application 
+            that connects drivers and passengers for easy and affordable travel.
+        </p>
+
+        <hr>
+
+        <h3>🚀 Features</h3>
+        <p>
+            • Post and book rides <br>
+            • Live location tracking 🗺️ <br>
+            • Chat system 💬 <br>
+            • Driver rating system ⭐ <br>
+            • AI chatbot assistant 🤖
+        </p>
+
+        <hr>
+
+        <h3>📘 How to Use (For New Users)</h3>
+
+        <p><b>👤 Step 1: Register</b><br>
+        Create an account as a Driver or Passenger.</p>
+
+        <p><b>🔐 Step 2: Login</b><br>
+        Login using your email and password.</p>
+
+        <p><b>🚗 Step 3: Use Based on Role</b></p>
+
+        <p><b>For Drivers:</b><br>
+        • Add ride details (source, destination, date, seats, price) <br>
+        • Wait for passengers to book your ride <br>
+        • Mark ride as completed after journey</p>
+
+        <p><b>For Passengers:</b><br>
+        • View available rides <br>
+        • Click "Book" to reserve a seat <br>
+        • Contact driver after booking <br>
+        • Rate the driver after ride completion ⭐</p>
+
+        <p><b>🤖 Chatbot Help:</b><br>
+        Use the chatbot to search rides, check prices, and get help instantly.</p>
+
+        <hr>
+
+        <p>
+            🎯 Our goal is to make travel smart, safe, and affordable for everyone.
+        </p>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>
