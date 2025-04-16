@@ -6,11 +6,12 @@ app = Flask(__name__)
 app.secret_key = "smart_ride_secret_key"
 
 # ===== DATABASE =====
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'ace_user'
-app.config['MYSQL_PASSWORD'] = 'ace_password'
-app.config['MYSQL_DB'] = 'ace_smart_ride'
-app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+import os
+
+app.config['MYSQL_HOST'] = os.environ.get('MYSQL_HOST')
+app.config['MYSQL_USER'] = os.environ.get('MYSQL_USER')
+app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQL_PASSWORD')
+app.config['MYSQL_DB'] = os.environ.get('MYSQL_DB')
 
 mysql = MySQL(app)
 socketio = SocketIO(app, async_mode='threading')
@@ -280,5 +281,8 @@ def chatbot():
     cursor.close()
     return jsonify({"response": response})
 # ===== RUN =====
+import os
+
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=5000)
+    port = int(os.environ.get("PORT", 10000))
+    socketio.run(app, host='0.0.0.0', port=port)
