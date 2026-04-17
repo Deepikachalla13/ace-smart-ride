@@ -103,11 +103,11 @@
 
    {% if user.role == 'passenger' %}
 
-    {% if ride.booked == 0 %}
-        <a href="{{ url_for('book', ride_id=ride.id) }}" class="btn accept">Book</a>
-    {% else %}
-        <button class="btn booked" disabled>Booked</button>
-    {% endif %}
+   {% if ride.already_booked > 0 %}
+    <button disabled>Booked</button>
+{% else %}
+    <a href="/book/{{ ride.id }}">Book</a>
+{% endif %}
 
 {% endif %}
 

@@ -82,9 +82,13 @@ def dashboard():
         FROM ratings rt
         WHERE rt.ride_id = r.id AND rt.user_id = %s
     ) AS already_rated
-
+    (
+    SELECT COUNT(*)
+    FROM bookings b
+    WHERE b.ride_id = r.id AND b.passenger_id = %s
+    ) AS already_booked
     FROM rides r
-    """, (session['id'],))
+    """, (session['id'],session['id']))
 
     rides = cursor.fetchall()
     cursor.close()
