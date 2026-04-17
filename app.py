@@ -127,16 +127,16 @@ def book(ride_id):
 
     cursor = mysql.connection.cursor()
 
+    # insert booking
     cursor.execute("""
-        UPDATE rides 
-        SET booked=1, passenger_id=%s 
-        WHERE id=%s
-    """, (session['id'], ride_id))
+        INSERT INTO bookings (ride_id, passenger_id)
+        VALUES (%s, %s)
+    """, (ride_id, session['id']))
 
     mysql.connection.commit()
     cursor.close()
 
-    return redirect('/dashboard')   # ✅ back to dashboard
+    return redirect('/dashboard')
 @app.route('/rate/<int:ride_id>', methods=['POST'])
 def rate_ride(ride_id):
     if 'id' not in session:
@@ -144,23 +144,17 @@ def rate_ride(ride_id):
 
     rating = request.form.get('rating')
 
-    if not rating:
-        return "Rating missing"
-
     cursor = mysql.connection.cursor()
 
-    # Get driver_id from ride
+    # get driver id
     cursor.execute("SELECT driver_id FROM rides WHERE id=%s", (ride_id,))
     ride = cursor.fetchone()
 
-    if not ride:
-        return "Ride not found"
-
-    # Insert rating
+    # insert rating
     cursor.execute("""
-        INSERT INTO ratings (ride_id, driver_id, passenger_id, rating)
-        VALUES (%s,%s,%s,%s)
-    """, (ride_id, ride['driver_id'], session['id'], rating))
+INSERT INTO ratings (ride_id, user_id, rating)
+VALUES (%s, %s, %s)
+""", (ride_id, session['id'], rating))
 
     mysql.connection.commit()
     cursor.close()

@@ -96,11 +96,11 @@
 <p><b>Driver Rating:</b> 
     {{ ride.avg_rating if ride.avg_rating else "No ratings yet" }}
 </p>
-
-    {% if ride.booked and user.role == 'passenger' %}
-        <p><b>Phone:</b> {{ ride.phone }}</p>
-    {% endif %}
-
+{% if ride.already_booked > 0 %}
+    <p>📞 Driver Contact: {{ ride.phone }}</p>
+{% else %}
+    <a href="/book/{{ ride.id }}">Book</a>
+{% endif %}
    {% if user.role == 'passenger' %}
 
    {% if ride.already_booked > 0 %}
