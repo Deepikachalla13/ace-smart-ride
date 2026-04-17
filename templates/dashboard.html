@@ -70,59 +70,60 @@
     <p><b>Date:</b> {{ ride.ride_date }}</p>
     <p><b>Seats:</b> {{ ride.seats }}</p>
     <p><b>Price:</b> ₹{{ ride.price }}</p>
-{% if user.role == 'passenger' and ride.booked == 1 %}
+{% if user.role == 'passenger' and ride.driver_id != user['id'] %}
 
-    {% if ride.already_rated == 0 %}
-        <!-- SHOW RATING FORM -->
-        <form action="{{ url_for('rate_ride', ride_id=ride.id) }}" method="POST">
-            <label>Rate Driver:</label>
-            <select name="rating" required>
-                <option value="">Select</option>
-                <option value="1">1 ⭐</option>
-                <option value="2">2 ⭐</option>
-                <option value="3">3 ⭐</option>
-                <option value="4">4 ⭐</option>
-                <option value="5">5 ⭐</option>
-            </select>
-            <button type="submit" class="btn accept">Submit</button>
-        </form>
+    {% if ride.already_booked > 0 %}
+
+        <!-- SHOW CONTACT -->
+        <p>📞 Driver Contact: {{ ride.phone }}</p>
+
+        <!-- SHOW RATING -->
+        {% if ride.already_rated == 0 %}
+            <form action="{{ url_for('rate_ride', ride_id=ride.id) }}" method="POST">
+                <label>Rate Driver:</label>
+                <select name="rating" required>
+                    <option value="">Select</option>
+                    <option value="1">1 ⭐</option>
+                    <option value="2">2 ⭐</option>
+                    <option value="3">3 ⭐</option>
+                    <option value="4">4 ⭐</option>
+                    <option value="5">5 ⭐</option>
+                </select>
+                <button type="submit" class="btn accept">Submit</button>
+            </form>
+        {% else %}
+            <p><b>✅ You rated this driver</b></p>
+        {% endif %}
+
+        <!-- BOOKED BUTTON -->
+        <button disabled>Booked</button>
 
     {% else %}
-        <!-- AFTER RATING -->
-        <p><b>✅ You rated this driver</b></p>
+
+        <!-- BOOK BUTTON -->
+        <a href="/book/{{ ride.id }}">Book</a>
+
     {% endif %}
 
 {% endif %}
+
+
+<!-- DRIVER RATING DISPLAY -->
 <p><b>Driver Rating:</b> 
     {{ ride.avg_rating if ride.avg_rating else "No ratings yet" }}
 </p>
-{% if ride.already_booked > 0 %}
-    <p>📞 Driver Contact: {{ ride.phone }}</p>
-{% else %}
-    <a href="/book/{{ ride.id }}">Book</a>
+
+
+<!-- DRIVER SIDE -->
+{% if user.role == 'driver' and ride.driver_id == user['id'] %}
+    <p><b>Your Ride</b></p>
+
+    {% if ride.completed == 0 %}
+        <a href="{{ url_for('complete_ride', ride_id=ride.id) }}" class="btn accept">
+            Mark Completed
+        </a>
+    {% endif %}
 {% endif %}
-   {% if user.role == 'passenger' %}
-
-   {% if ride.already_booked > 0 %}
-    <button disabled>Booked</button>
-{% else %}
-    <a href="/book/{{ ride.id }}">Book</a>
-{% endif %}
-
-{% endif %}
-
-    {% if user.role == 'driver' and ride.booked == 1 and ride.completed == 0 %}
-    <a href="{{ url_for('complete_ride', ride_id=ride.id) }}" class="btn accept">
-        Mark Completed
-    </a>
-{% endif %}
-
-</div>
-
-        
-    {% endfor %}
-
-</div>
 
 <!-- FLOATING CHAT ICON -->
 <div id="chat-icon">💬</div>
