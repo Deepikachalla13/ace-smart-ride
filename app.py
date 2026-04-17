@@ -89,7 +89,9 @@ def dashboard():
     rides = cursor.fetchall()
     cursor.close()
 
-    return render_template('dashboard.html', rides=rides)
+    return render_template('dashboard.html', 
+                       rides=rides, 
+                       user=session)
 # ===== ADD RIDE =====
 @app.route('/add_ride', methods=['POST'])
 def add_ride():
