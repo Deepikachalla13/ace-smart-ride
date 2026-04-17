@@ -1,6 +1,6 @@
 flask
 flask-mysqldb
 flask-socketio
-eventlet
-werkzeug
 gunicorn
+gevent
+gevent-websocket

@@ -16,16 +16,7 @@ app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQL_PASSWORD')
 app.config['MYSQL_DB'] = os.environ.get('MYSQL_DB')
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
-socketio = SocketIO(
-    app,
-    cors_allowed_origins="*",
-    async_mode="eventlet",
-    ping_timeout=60,
-    ping_interval=25,
-    logger=True,
-    engineio_logger=True
-)
-
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
 # ===== HOME =====
 @app.route('/')
 def home():
