@@ -321,3 +321,29 @@ header div {
     font-weight: 600;
     margin-bottom: 10px;
 }
+.book-btn {
+    background: #28a745;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.book-btn:hover {
+    background: #218838;
+}
+
+.book-icon {
+    font-size: 20px;
+    text-decoration: none;
+    padding: 6px;
+    border-radius: 50%;
+    background: #28a745;
+    color: white;
+    display: inline-block;
+}
+
+.book-icon:hover {
+    transform: scale(1.1);
+}
