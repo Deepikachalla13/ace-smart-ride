@@ -1,5 +1,5 @@
 console.log("JS Loaded");
-var socket = io();
+
 
 var map = L.map('map').setView([17.3850, 78.4867], 10);
 
@@ -89,9 +89,9 @@ function clearChat() {
     }
 }
 function openAbout() {
-    document.getElementById("about-modal").style.display = "block";
+    document.getElementById("about-modal").classList.add("show");
 }
 
 function closeAbout() {
-    document.getElementById("about-modal").style.display = "none";
+    document.getElementById("about-modal").classList.remove("show");
 }
