@@ -1,8 +1,9 @@
 console.log("JS Loaded");
 var socket = io({
-    transports: ["websocket"]
+    transports: ["websocket"],
+    reconnection: true,
+    reconnectionAttempts: 10
 });
-
 var map = L.map('map').setView([17.3850, 78.4867], 10);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
