@@ -70,26 +70,26 @@ def dashboard():
 
     cursor = mysql.connection.cursor()
     cursor.execute("""
-SELECT r.*,
-(
-    SELECT ROUND(AVG(rt.rating),1)
-    FROM ratings rt
-    WHERE rt.driver_id = r.driver_id
-) AS avg_rating,
+    SELECT r.*,
+    (
+        SELECT ROUND(AVG(rt.rating),1)
+        FROM ratings rt
+        WHERE rt.ride_id = r.id
+    ) AS avg_rating,
 
-(
-    SELECT COUNT(*)
-    FROM ratings rt
-    WHERE rt.ride_id = r.id AND rt.passenger_id = %s
-) AS already_rated
+    (
+        SELECT COUNT(*)
+        FROM ratings rt
+        WHERE rt.ride_id = r.id AND rt.user_id = %s
+    ) AS already_rated
 
-FROM rides r
-""", (session['id'],))
+    FROM rides r
+    """, (session['id'],))
+
     rides = cursor.fetchall()
     cursor.close()
 
-    return render_template('dashboard.html', rides=rides, user=session)
-
+    return render_template('dashboard.html', rides=rides)
 # ===== ADD RIDE =====
 @app.route('/add_ride', methods=['POST'])
 def add_ride():
