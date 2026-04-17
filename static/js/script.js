@@ -1,5 +1,7 @@
 console.log("JS Loaded");
-
+var socket = io({
+    transports: ["websocket"]
+});
 
 var map = L.map('map').setView([17.3850, 78.4867], 10);
 
@@ -7,7 +9,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // LIVE LOCATION
-var socket = io();
+
 
 // SEND LOCATION
 if (navigator.geolocation) {

@@ -14,7 +14,13 @@ app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQL_PASSWORD')
 app.config['MYSQL_DB'] = os.environ.get('MYSQL_DB')
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
+socketio = SocketIO(
+    app,
+    cors_allowed_origins="*",
+    async_mode="eventlet",
+    ping_timeout=60,
+    ping_interval=25
+)
 
 # ===== HOME =====
 @app.route('/')
@@ -286,6 +292,6 @@ def chatbot():
 # ===== RUN =====
 import os
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
-    socketio.run(app, host='0.0.0.0', port=port)
+    socketio.run(app, host="0.0.0.0", port=port)
