@@ -17,7 +17,7 @@
     <h2>🚗 Ace Smart Ride</h2>
     <div>
         Welcome {{ user['name'] }} ({{ user['role'] }})
-      <a href="javascript:void(0)" onclick="openAbout()">About</a>
+      
 <a href="/logout" class="nav-link logout-btn">Logout</a>
     </div>
 </header>
@@ -140,62 +140,6 @@
     <div id="chat-messages"></div>
 
     <input type="text" id="chat-input" placeholder="Ask something..." onkeypress="sendChat(event)">
-</div>
-<!-- ABOUT POPUP -->
-<div id="about-modal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeAbout()">&times;</span>
-
-        <h2>🚗 Ace Smart Ride</h2>
-
-        <p>
-            Ace Smart Ride is an intercity ride-sharing web application 
-            that connects drivers and passengers for easy and affordable travel.
-        </p>
-
-        <hr>
-
-        <h3>🚀 Features</h3>
-        <p>
-            • Post and book rides <br>
-            • Live location tracking 🗺️ <br>
-            • Chat system 💬 <br>
-            • Driver rating system ⭐ <br>
-            • AI chatbot assistant 🤖
-        </p>
-
-        <hr>
-
-        <h3>📘 How to Use (For New Users)</h3>
-
-        <p><b>👤 Step 1: Register</b><br>
-        Create an account as a Driver or Passenger.</p>
-
-        <p><b>🔐 Step 2: Login</b><br>
-        Login using your email and password.</p>
-
-        <p><b>🚗 Step 3: Use Based on Role</b></p>
-
-        <p><b>For Drivers:</b><br>
-        • Add ride details (source, destination, date, seats, price) <br>
-        • Wait for passengers to book your ride <br>
-        • Mark ride as completed after journey</p>
-
-        <p><b>For Passengers:</b><br>
-        • View available rides <br>
-        • Click "Book" to reserve a seat <br>
-        • Contact driver after booking <br>
-        • Rate the driver after ride completion ⭐</p>
-
-        <p><b>🤖 Chatbot Help:</b><br>
-        Use the chatbot to search rides, check prices, and get help instantly.</p>
-
-        <hr>
-
-        <p>
-            🎯 Our goal is to make travel smart, safe, and affordable for everyone.
-        </p>
-    </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>

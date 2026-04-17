@@ -91,10 +91,3 @@ function clearChat() {
         document.getElementById("chat-messages").innerHTML = "";
     }
 }
-function openAbout() {
-    document.getElementById("about-modal").classList.add("show");
-}
-
-function closeAbout() {
-    document.getElementById("about-modal").classList.remove("show");
-}
